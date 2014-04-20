@@ -1,0 +1,14 @@
+B _build/
+B _build/src/
+B _build/common/
+B _build/html/
+
+S src/
+S common/
+S html/
+
+PKG tyxml
+PKG js_of_ocaml
+PKG lilis
+PKG lilis.sequence
+PKG glilis.jsoo

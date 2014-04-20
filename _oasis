@@ -1,0 +1,48 @@
+OASISFormat: 0.4
+Name:        jsLILiS
+Version:     0.1
+Synopsis:    Website for lilis
+Description: A Library to interpret, evaluate and draw L-systems.
+Authors:     Gabriel Radanne <drupyog@zoho.com>
+License:     MIT
+Plugins:     META (0.3), DevFiles (0.3)
+Homepage:    http://drup.github.io/LILiS/
+
+AlphaFeatures: ocamlbuild_more_args, compiled_setup_ml
+
+BuildTools: ocamlbuild
+XOCamlbuildPluginTags: package(js_of_ocaml.ocamlbuild)
+
+OCamlVersion: >= 4.01
+
+Library common
+  Path: common
+  Install: false
+  Modules: Common
+  CompiledObject: byte
+  BuildDepends: batteries.core
+
+Executable htmlpage
+  Install: false
+  Path: html
+  MainIs: htmlpage.ml
+  CompiledObject: byte
+  BuildDepends:
+    common, tyxml
+  DataFiles:
+    lilis.css
+
+Executable jsrun
+  Install: false
+  Path: js
+  MainIs: jslilis.ml
+  CompiledObject: byte
+  BuildDepends:
+    common,
+    graphics, js_of_ocaml, js_of_ocaml.graphics, js_of_ocaml.syntax,
+    lilis, lilis.sequence, glilis.jsoo
+
+
+Test gen_page
+  Command: $htmlpage $jsrun html/lilis.css > lilis.html
+  TestTools: htmlpage
