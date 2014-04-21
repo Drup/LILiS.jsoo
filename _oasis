@@ -38,7 +38,7 @@ Executable jsrun
   MainIs: jslilis.ml
   CompiledObject: byte
   BuildDepends:
-    common,
+    common, lwt.syntax,
     graphics, js_of_ocaml, js_of_ocaml.graphics, js_of_ocaml.syntax,
     lilis, lilis.sequence, glilis.jsoo
 
