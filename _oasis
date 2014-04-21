@@ -19,14 +19,14 @@ Library common
   Path: common
   Install: false
   Modules: Common
-  CompiledObject: byte
+  CompiledObject: best
   BuildDepends: batteries.core
 
 Executable htmlpage
   Install: false
   Path: html
   MainIs: htmlpage.ml
-  CompiledObject: byte
+  CompiledObject: best
   BuildDepends:
     common, tyxml
   DataFiles:
