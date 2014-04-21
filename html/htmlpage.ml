@@ -30,7 +30,7 @@ let body js_script css = M.(body ([
       a_width 800 ;
       a_height 800 ;
     ] [] ;
-    M.div ~a:[a_class ["sidebar"]] [
+    M.div ~a:[a_id Id.sidebar] [
 
       M.select ~a:[a_id Id.select_lsys] [] ;
       M.textarea ~a:[a_id Id.lsys_area] @@ M.pcdata "" ;

@@ -3,16 +3,17 @@ open BatFun
 
 module Html = Dom_html
 
+let doc = Html.document
+
 
 let by_id_coerce s f =
   Js.coerce_opt
-    Html.document##getElementById(Js.string s)
-    f
+    doc##getElementById(Js.string s) f
     (fun _ -> failwith (Printf.sprintf "cannot find dom id %S\n%!" s))
 
 module El = struct
-
   let canvas      = by_id_coerce Id.canvas      Html.CoerceTo.canvas
+  let sidebar     = by_id_coerce Id.sidebar     Html.CoerceTo.div
   let select_lsys = by_id_coerce Id.select_lsys Html.CoerceTo.select
   let lsys_area   = by_id_coerce Id.lsys_area   Html.CoerceTo.textarea
   let gen_slider  = by_id_coerce Id.gen_slider  Html.CoerceTo.input

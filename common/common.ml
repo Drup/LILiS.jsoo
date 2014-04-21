@@ -14,6 +14,7 @@ module Id = struct
 
   let canvas = "canvas"
 
+  let sidebar = "sidebar"
   let select_lsys = "selectlsys"
 
   let lsys_area = "lsysarea"

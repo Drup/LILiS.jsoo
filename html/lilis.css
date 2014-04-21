@@ -4,10 +4,10 @@
 }
 
 html {
-    background-color : #000 ;
+    /* background-color : #000 ; */
 }
 
-#canvas, .sidebar {
+#canvas, #sidebar {
     height: 100% ;
     display : inline-block ;
     position: absolute;
@@ -19,11 +19,11 @@ html {
     margin: auto ;
 }
 
-.sidebar {
+#sidebar {
     left: 79%; right: 0;
 }
 
-.sidebar * {
+#sidebar * {
     display: block ;
     width : 100% ;
 }
