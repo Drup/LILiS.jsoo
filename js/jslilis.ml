@@ -1,13 +1,13 @@
-open Common
 open BatFun
-
 open Lwt
-
-module LsEn = Lilis.Make(LisSequence)
 module Html = Dom_html
 
-let doc = Html.document
+open Common
+open Bank
 
+module LsEn = Lilis.Make(LisSequence)
+
+let doc = Html.document
 
 let by_id_coerce s f =
   Js.coerce_opt
@@ -25,31 +25,70 @@ module El = struct
 end
 open El
 
-(** Available L-systems.
+(** Encoding/Decoding into URL for L-systems. *)
 
-  The goal is to fetch the list from a repository and fetch the L-systems on demand. *)
+let delimiter = Js.string "&"
 
-(* TOFIX, should fetch *)
-let lilis_bank = Lwt.return [
-  "Von Koch", "vonkoch.lilis" ;
-  "Dragon", "dragon.lilis" ;
-  "Tetradragon", "tedragon.lilis" ;
-  "Fern", "fern.lilis" ;
-]
+let encode_lsys n lsys =
+  Js.encodeURIComponent (n##concat_2(delimiter, lsys))
 
-let get_lilis_content x =
-  lwt bank = lilis_bank in
-  let lsysname = BatList.Exceptionless.assoc x bank in
-  let content = lsysname |? "" in (* TOFIX, should fetch *)
-  Lwt.return content
+let decode_lsys enc =
+  let str = Js.decodeURIComponent enc in
+  try
+    let strs = Js.str_array str##slice_end(1)##split(delimiter) in
+    let n =
+      Js.parseInt @@
+      Js.Optdef.get (Js.array_get strs 0) (fun () -> raise Not_found) in
+    let lsys =
+      Js.Optdef.get (Js.array_get strs 1) (fun () -> raise Not_found) in
+    Some (n, lsys)
+  with _ -> None
+
+let update_page n lsys =
+  lsys_area##value <- lsys ;
+  (Js.Unsafe.coerce gen_slider)##max <-
+    Js.string @@ string_of_int (n * 14 / 10) ;
+  gen_slider##value <- Js.string @@ string_of_int n ;
+  gen_input##value <- Js.string @@ string_of_int n
+
+let update_url () =
+  let lsys = lsys_area##value in
+  let n = gen_input##value in
+  let loc = Html.window##location in
+  loc##hash <- encode_lsys n lsys
 
 let () =
+  (* Change the URL when the L-system changes *)
+  let open Lwt_js_events in
+  let inputs_callback _ _ =
+    update_url () ; Lwt.return ()
+  in
+  Lwt.async (fun () -> inputs lsys_area inputs_callback) ;
+  Lwt.async (fun () -> inputs gen_input inputs_callback) ;
+  Lwt.async (fun () -> inputs gen_slider inputs_callback) ;
+
+  (* When the page is loaded, look if there is an href, and load it. *)
   Lwt.async (fun () ->
-    lwt bank = lilis_bank in
+    let loc = Html.window##location in
+    let (n, lsys) = match decode_lsys loc##hash with
+      | None ->
+          BatOption.get @@ decode_lsys @@ snd @@ List.hd bank
+      | Some enc -> enc
+    in
+    update_page n lsys ;
+    Lwt.return ()
+  )
+
+
+(** Available L-systems. *)
+
+let () =
+  (* Init L-system list *)
+  Lwt.async (fun () ->
     List.iter
       (fun x ->
          let o = Html.createOption doc in
-         let v = Js.string @@ fst x in
+         let v = fst x in
          o##value <- v ;
          o##innerHTML <- v ;
          Dom.appendChild select_lsys o)
@@ -57,11 +96,15 @@ let () =
     Lwt.return ()
   ) ;
 
+  (* Change the L-system when the select changes. *)
   let open Lwt_js_events in
   Lwt.async (fun () ->
     changes select_lsys (fun _ _ ->
-      lwt content = get_lilis_content @@ Js.to_string select_lsys##value in
-      let () = lsys_area##value <- Js.string content in
+      let select_val = select_lsys##value in
+      let lsys_enc = BatList.Exceptionless.assoc select_val bank in
+      let (n, lsys) = BatOption.bind lsys_enc decode_lsys |? (10, Js.string "") in
+      update_page n lsys ;
+      Html.window##location##href <- (lsys_enc |? Js.string "") ;
       Lwt.return ()
     ))
 
