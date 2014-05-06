@@ -1,7 +1,5 @@
-open BatFun
-
 let at l i =
-  try Some (BatList.at l i)
+  try Some (List.nth i l)
   with Not_found -> None
 
 let opt_get l i =

@@ -1,6 +1,6 @@
 open Html5
 open Common
-open BatFun
+open CCFun
 
 let dump_file file =
   let buf = Buffer.create 16 in
@@ -61,14 +61,16 @@ let _ =
 
   let js_script =
     opt_get Sys.argv 1
-    |> BatOption.map (fun str -> BatString.replace ~sub:".byte" ~by:".js" ~str)
-    |> BatOption.map snd
-    |> BatOption.map_default (fun x -> [script x]) []
+    |> CCOpt.map (fun str ->
+      let l = String.length str in
+      assert (l > 5 && String.sub str (l-5) 5 = ".byte") ;
+      String.sub str 0 (l-5) ^ ".js")
+    |> CCOpt.maybe (fun x -> [script x]) []
   in
 
   let css =
     opt_get Sys.argv 2
-    |> BatOption.map_default (fun x -> [css x]) []
+    |> CCOpt.maybe (fun x -> [css x]) []
   in
 
   let page =

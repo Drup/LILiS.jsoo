@@ -1,11 +1,16 @@
-open BatFun
+open CCFun
+
+let (|?) o d = match o with
+  | Some x -> x
+  | None -> d
+
 open Lwt
 module Html = Dom_html
 
 open Common
 open Bank
 
-module LsEn = Lilis.Make(LisSequence)
+module LsEn = Lilis.Make(LisCC.Sequence)
 
 let doc = Html.document
 
@@ -72,7 +77,7 @@ let () =
     let loc = Html.window##location in
     let (n, lsys) = match decode_lsys loc##hash with
       | None ->
-          BatOption.get @@ decode_lsys @@ snd @@ List.hd bank
+          CCOpt.get_exn @@ decode_lsys @@ snd @@ List.hd bank
       | Some enc -> enc
     in
     update_page n lsys ;
@@ -101,8 +106,8 @@ let () =
   Lwt.async (fun () ->
     changes select_lsys (fun _ _ ->
       let select_val = select_lsys##value in
-      let lsys_enc = BatList.Exceptionless.assoc select_val bank in
-      let (n, lsys) = BatOption.bind lsys_enc decode_lsys |? (10, Js.string "") in
+      let lsys_enc = CCOpt.wrap (List.assoc select_val) bank in
+      let (n, lsys) = CCOpt.(lsys_enc >>= decode_lsys) |? (10, Js.string "") in
       update_page n lsys ;
       Html.window##location##href <- (lsys_enc |? Js.string "") ;
       Lwt.return ()

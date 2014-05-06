@@ -2,12 +2,4 @@
 # DO NOT EDIT (digest: d41d8cd98f00b204e9800998ecf8427e)
 # OASIS_STOP
 
-<js/*.ml>: syntax(camlp4o)
-
-"js/jslilis.js": opt(3)
-"js/jslilis.js": jsoo_flag(+js_of_ocaml/weak.js)
-"js/jslilis.js": jsoo_flag(+js_of_ocaml/graphics.js)
-
-## Doesn't work for now
-"js/jslilis.js": pkg_graphics
-"js/jslilis.js": joo_weak
+"js/jslilis.js": opt(3), js_graphics

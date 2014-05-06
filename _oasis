@@ -20,7 +20,7 @@ Library common
   Install: false
   Modules: Common
   CompiledObject: best
-  BuildDepends: batteries.core
+  BuildDepends: containers
 
 Executable htmlpage
   Install: false
@@ -39,8 +39,8 @@ Executable jsrun
   CompiledObject: byte
   BuildDepends:
     common, lwt.syntax,
-    graphics, js_of_ocaml, js_of_ocaml.graphics, js_of_ocaml.syntax,
-    lilis, lilis.sequence, glilis.jsoo
+    js_of_ocaml, js_of_ocaml.graphics, js_of_ocaml.syntax,
+    lilis, lilis.containers, glilis.jsoo
 
 
 Test gen_page
