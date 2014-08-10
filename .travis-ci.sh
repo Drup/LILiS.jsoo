@@ -1,5 +1,5 @@
 
-export ppa=avsm/ocaml41+opam11
+export ppa=avsm/ppa
 
 echo "yes" | sudo add-apt-repository ppa:$ppa
 sudo apt-get update -qq
@@ -8,6 +8,8 @@ export OPAMYES=1
 
 opam init
 eval `opam config env`
+
+opam pin add lilis https://github.com/Drup/LILiS.git
 
 opam install ocamlfind oasis tyxml js_of_ocaml containers lilis
 
