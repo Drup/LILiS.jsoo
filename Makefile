@@ -47,5 +47,6 @@ setup.exe: setup.ml
 
 deploy: test
 	git checkout gh-pages && \
-	cp _build/lilis.html _build/lilis.js . && \
-	git add lilis.html lilis.js
+	cp _build/lilis.html index.html && \
+	cp _build/lilis.js . && \
+	git add index.html lilis.js
