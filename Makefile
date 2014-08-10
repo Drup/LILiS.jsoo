@@ -46,6 +46,6 @@ setup.exe: setup.ml
 # OASIS_STOP
 
 deploy: test
-       git checkout gh-pages && rm -rf * && \
-       cp _build/lilis.html _build/lilis.js . && \
-       git add --all .
+	git checkout gh-pages && \
+	cp _build/lilis.html _build/lilis.js . && \
+	git add lilis.html lilis.js
