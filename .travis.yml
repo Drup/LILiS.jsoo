@@ -1,0 +1,5 @@
+language: c
+script: bash -e .travis-ci.sh
+env:
+  global:
+    secure: FaCcVC3l/doQERQDB3m9GDfvi83WVZsEnXUDjE7R4+/Au6pw8gUKBKtJHd/Uozv0X8fOE+oftNgfUfssmm0+8w56S1ybbFtVE8P1ryj7Dt48Er6Ir9lZMmwfZE/adl+/H0ZBpisQVfqNv9Tq8GO3wG0VGA1SAMpItPztb5am33Y=
