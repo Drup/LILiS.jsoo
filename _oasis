@@ -1,5 +1,5 @@
 OASISFormat: 0.4
-Name:        jsLILiS
+Name:        LILiS.jsoo
 Version:     0.1
 Synopsis:    Website for lilis
 Description: A Library to interpret, evaluate and draw L-systems.
@@ -44,5 +44,8 @@ Executable jsrun
 
 
 Test gen_page
-  Command: $htmlpage $jsrun html/lilis.css > lilis.html
+  Command:
+    jsoo_minify js/jslilis.js -o lilis.js && \
+    $htmlpage lilis.js ../html/lilis.css > lilis.html
   TestTools: htmlpage
+  WorkingDirectory: _build

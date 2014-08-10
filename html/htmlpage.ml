@@ -61,10 +61,6 @@ let _ =
 
   let js_script =
     opt_get Sys.argv 1
-    |> CCOpt.map (fun str ->
-      let l = String.length str in
-      assert (l > 5 && String.sub str (l-5) 5 = ".byte") ;
-      String.sub str 0 (l-5) ^ ".js")
     |> CCOpt.maybe (fun x -> [script x]) []
   in
 
