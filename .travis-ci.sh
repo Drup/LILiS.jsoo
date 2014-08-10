@@ -9,7 +9,7 @@ export OPAMYES=1
 opam init
 eval `opam config env`
 
-opam pin add lilis https://github.com/Drup/LILiS.git
+opam pin lilis https://github.com/Drup/LILiS.git
 
 opam install ocamlfind oasis tyxml js_of_ocaml containers lilis
 
