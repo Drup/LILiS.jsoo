@@ -44,3 +44,8 @@ setup.exe: setup.ml
 .PHONY: build doc test all install uninstall reinstall clean distclean configure
 
 # OASIS_STOP
+
+deploy: test
+       git checkout gh-pages && rm -rf * && \
+       cp _build/lilis.html _build/lilis.js . && \
+       git add --all .
