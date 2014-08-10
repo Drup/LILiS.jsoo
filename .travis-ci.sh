@@ -11,8 +11,13 @@ eval `opam config env`
 
 opam pin lilis https://github.com/Drup/LILiS.git
 
-opam install ocamlfind oasis tyxml js_of_ocaml containers lilis
+echo -e "Install dependencies"
+opam install ocamlfind oasis tyxml js_of_ocaml containers
 
+echo -e "Install lilis"
+opam install lilis
+
+echo -e "Build!"
 ./configure --enable-tests
 make test
 
@@ -26,7 +31,10 @@ if [ "$TRAVIS_REPO_SLUG" == "Drup/LILiS.jsoo" ] \
     git config --global user.email "travis@travis-ci.org"
     git config --global user.name "travis-ci"
     make deploy
-    git commit -m "Update documentation $TRAVIS_BUILD_NUMBER"
-    git push -q origin gh-pages
-    echo -e "Published to gh-pages.\n"
+
+    if [ -n "$(git status --untracked-files=no --porcelain)" ]; then
+        git commit -m "Update documentation $TRAVIS_BUILD_NUMBER"
+        git push -q origin gh-pages
+        echo -e "Published to gh-pages.\n"
+    fi
 fi
