@@ -13,7 +13,7 @@ AlphaFeatures: ocamlbuild_more_args, compiled_setup_ml
 BuildTools: ocamlbuild
 XOCamlbuildPluginTags: package(js_of_ocaml.ocamlbuild)
 
-OCamlVersion: >= 4.01
+OCamlVersion: >= 4.02
 
 Library common
   Path: common
@@ -38,8 +38,8 @@ Executable jsrun
   MainIs: jslilis.ml
   CompiledObject: byte
   BuildDepends:
-    common, lwt.syntax,
-    js_of_ocaml, js_of_ocaml.graphics, js_of_ocaml.syntax,
+    common, lwt.ppx,
+    js_of_ocaml, js_of_ocaml.graphics, js_of_ocaml.ppx,
     lilis, lilis.containers, glilis.jsoo
 
 

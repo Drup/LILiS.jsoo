@@ -16,7 +16,7 @@ let doc = Html.document
 
 let by_id_coerce s f =
   Js.coerce_opt
-    doc##getElementById(Js.string s) f
+    [%js doc#getElementById (Js.string s)] f
     (fun _ -> failwith (Printf.sprintf "cannot find dom id %S\n%!" s))
 
 module El = struct
@@ -35,12 +35,12 @@ open El
 let delimiter = Js.string "&"
 
 let encode_lsys n lsys =
-  Js.encodeURIComponent (n##concat_2(delimiter, lsys))
+  Js.encodeURIComponent ([%js n#concat_2(delimiter, lsys)])
 
 let decode_lsys enc =
   let str = Js.decodeURIComponent enc in
   try
-    let strs = Js.str_array str##slice_end(1)##split(delimiter) in
+    let strs = Js.str_array [%js [%js str#slice_end(1)]#split(delimiter)] in
     let n =
       Js.parseInt @@
       Js.Optdef.get (Js.array_get strs 0) (fun () -> raise Not_found) in
@@ -50,17 +50,17 @@ let decode_lsys enc =
   with _ -> None
 
 let update_page n lsys =
-  lsys_area##value <- lsys ;
-  (Js.Unsafe.coerce gen_slider)##max <-
-    Js.string @@ string_of_int (n * 14 / 10) ;
-  gen_slider##value <- Js.string @@ string_of_int n ;
-  gen_input##value <- Js.string @@ string_of_int n
+  [%js lsys_area#value := lsys] ;
+  [%js (Js.Unsafe.coerce gen_slider)#max :=
+    Js.string @@ string_of_int (n * 14 / 10) ] ;
+  [%js gen_slider#value := Js.string @@ string_of_int n ] ;
+  [%js gen_input#value := Js.string @@ string_of_int n ]
 
 let update_url () =
-  let lsys = lsys_area##value in
-  let n = gen_input##value in
-  let loc = Html.window##location in
-  loc##hash <- encode_lsys n lsys
+  let lsys = [%js lsys_area#value] in
+  let n = [%js gen_input#value] in
+  let loc = [%js Html.window#location] in
+  [%js loc#hash := encode_lsys n lsys]
 
 let () =
   (* Change the URL when the L-system changes *)
@@ -74,8 +74,8 @@ let () =
 
   (* When the page is loaded, look if there is an href, and load it. *)
   Lwt.async (fun () ->
-    let loc = Html.window##location in
-    let (n, lsys) = match decode_lsys loc##hash with
+    let loc = [%js Html.window#location] in
+    let (n, lsys) = match decode_lsys [%js loc#hash] with
       | None ->
           CCOpt.get_exn @@ decode_lsys @@ snd @@ List.hd bank
       | Some enc -> enc
@@ -94,8 +94,8 @@ let () =
       (fun x ->
          let o = Html.createOption doc in
          let v = fst x in
-         o##value <- v ;
-         o##innerHTML <- v ;
+         [%js o#value := v] ;
+         [%js o#innerHTML := v] ;
          Dom.appendChild select_lsys o)
       bank ;
     Lwt.return ()
@@ -105,11 +105,11 @@ let () =
   let open Lwt_js_events in
   Lwt.async (fun () ->
     changes select_lsys (fun _ _ ->
-      let select_val = select_lsys##value in
+      let select_val = [%js select_lsys#value] in
       let lsys_enc = CCOpt.wrap (List.assoc select_val) bank in
       let (n, lsys) = CCOpt.(lsys_enc >>= decode_lsys) |? (10, Js.string "") in
       update_page n lsys ;
-      Html.window##location##href <- (lsys_enc |? Js.string "") ;
+      [%js [%js Html.window#location]#href := (lsys_enc |? Js.string "") ];
       Lwt.return ()
     ))
 
@@ -119,22 +119,22 @@ let () =
   let open Lwt_js_events in
   Lwt.async (fun () ->
     inputs gen_slider (fun _ _ ->
-      gen_input##value <- gen_slider##value ;
+      [%js gen_input#value := [%js gen_slider#value]] ;
       Lwt.return ()
     )) ;
   Lwt.async (fun () ->
     inputs gen_input (fun _ _ ->
-      gen_slider##value <- gen_input##value ;
+      [%js gen_slider#value := [%js gen_input#value]] ;
       Lwt.return ()
     ))
 
 let retrieve_lsys () =
-  Js.to_string lsys_area##value
+  Js.to_string [%js lsys_area#value]
   |> LisUtils.lsystem_from_string
   |> LisOptim.constant_folding
 
 let retrieve_gen () =
-  int_of_string @@ Js.to_string gen_input##value
+  int_of_string @@ Js.to_string [%js gen_input#value]
 
 let turtle = LisJsoo.jsturtle canvas
 
@@ -191,13 +191,13 @@ let () =
   let stop_button =
     Html.createButton doc
   in
-  stop_button##innerHTML <- Js.string "Stop !" ;
+  [%js stop_button#innerHTML := Js.string "Stop !"] ;
 
   let open Lwt_js_events in
   Lwt.async (fun () ->
     clicks go_button (fun _ _ ->
       Dom.replaceChild sidebar stop_button go_button ;
-      lwt () = Lwt_js.sleep 0.1 in
+      let%lwt () = Lwt_js.sleep 0.1 in
       let canceler = click stop_button >>= fun _ -> Lwt.return_unit in
       let runner = Lwt.wrap run in (* We need a web worker here *)
       let t = Lwt.pick [ canceler ; runner ] in
