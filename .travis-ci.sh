@@ -21,15 +21,20 @@ echo -e "Build!"
 ./configure --enable-tests
 make test
 
-# If appropriate, build and push the documentation
+# If appropriate, build and push the website
 if [ "$TRAVIS_REPO_SLUG" == "Drup/LILiS.jsoo" ] \
     && [ "$TRAVIS_PULL_REQUEST" == "false" ] \
     && [ "$TRAVIS_BRANCH" == "master" ] \
     && [ "${DOC}" != "" ] ; then
 
-    echo -e "Publishing ocamldoc...\n"
+    echo -e "Publishing website...\n"
     git config --global user.email "travis@travis-ci.org"
     git config --global user.name "travis-ci"
+    git clone https://${GH_TOKEN}@github.com/Drup/LILiS.jsoo .website
+    cd .website
+    git fetch
+    ./configure --enable-tests
+    make test
     make deploy
 
     if [ -n "$(git status --untracked-files=no --porcelain)" ]; then
