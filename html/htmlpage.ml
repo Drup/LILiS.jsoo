@@ -25,11 +25,13 @@ let head =
     (charset :: [])
 
 let body js_script css = M.(body ([
-    M.canvas ~a:[
-      a_id Id.canvas ;
-      a_width 800 ;
-      a_height 800 ;
-    ] [] ;
+    M.div ~a:[a_id "canvasdiv"] [
+      M.canvas ~a:[
+        a_id Id.canvas ;
+        a_width 800 ;
+        a_height 800 ;
+      ] [] ;
+    ] ;
     M.div ~a:[a_id Id.sidebar] [
 
       M.select ~a:[a_id Id.select_lsys] [] ;
@@ -66,7 +68,9 @@ let _ =
 
   let css =
     opt_get Sys.argv 2
-    |> CCOpt.maybe (fun x -> [css x]) []
+    |> CCOpt.maybe
+      (fun x -> [css (x^"lilis.css")])
+      []
   in
 
   let page =

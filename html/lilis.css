@@ -1,51 +1,84 @@
 * {
     margin : 0 ;
     padding : 0 ;
+    background-color: rgb(0, 0, 0);
+    color: rgb(255, 255, 255);
 }
 
 html {
-    /* background-color : #000 ; */
+    background-color : #000 ;
 }
 
-#canvas, #sidebar {
-    height: 100% ;
-    display : inline-block ;
-    position: absolute;
-    top: 0; bottom: 0;
+
+body {
+    position: absolute ;
+    top: 0 ;
+    bottom: 0 ;
+    right: 0 ;
+    left: 0 ;
+    /* display: flex ; */
+    /* flex-direction: row */
+}
+
+#canvasdiv {
+    position: absolute ;
+    top: 0 ;
+    bottom: 0 ;
+    left: 0 ;
+    /* flex: 1 1 available ; */
+    /* align-self: stretch ; */
+
+    /* display: flex; */
+    /* flex-direction: column; */
+    /* justify-content: center ; */
 }
 
 #canvas {
-    left: 0; right: 20%;
-    margin: auto ;
+    margin:auto;
+    height: fit-content ;
+    max-height: 100% ;
+    width: fit-content ;
+    text-align: center ;
 }
 
 #sidebar {
-    left: 79%; right: 0;
+    position: absolute ;
+    /* flex: 2 1 auto ; */
+    /* align-self: stretch ; */
+
+    top: 0 ;
+    bottom: 0 ;
+    right: 0 ;
+    min-width: 250px ;
+    display: flex;
+    flex-direction: column
 }
 
-#sidebar * {
-    display: block ;
-    width : 100% ;
+#selectlsys {
+	  font-family: mono;
+    border: none;
+}
+
+textarea#lsysarea {
+	  font-family: mono;
+    resize: none;
+    width: auto ;
+    overflow: auto;
+    flex: 1 1 auto ;
+    border: none;
+    background-color: #1D0800;
 }
 
 .generation {
-    display: table;
-    width : 100% ;
+    display: flex;
+    flex-direction: row
+    align-self: stretch ;
     height: 25px;
-    margin-top: -5px ;
 }
 
 #genslider {
-    display: table-cell;
-
-    width: auto ;
+    flex: 1 1 auto ;
     height: 25px;
-    padding: 3px 0 2px;
-
-    color: rgb(255, 255, 255);
-
-    text-align: center;
-    white-space: nowrap;
 
     cursor: pointer;
 
@@ -57,25 +90,21 @@ html {
 }
 
 #geninput {
-    display: table-cell;
+    flex: 0 0 40px ;
+    margin-left: 5px ;
 
-    width: 1%;
-    min-width: 40px;
-    padding: 3px 0 2px;
-
-    background-color: rgb(0, 0, 0);
-    color: rgb(255, 255, 255);
-
-    border-radius: 4px;
-    border: solid 1px grey;
-    white-space: nowrap;
+    border: none;
 
     text-align: center;
     text-decoration: none;
+	  font-family: mono;
+    border-radius: 4px;
+    border: solid 1px grey;
+}
 
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: -moz-none;
-    -o-user-select: none;
-    user-select: none;
+#sidebar button {
+    flex: 0 1 40px ;
+    cursor: pointer;
+    background-color: #1D0800;
+    border: none;
 }

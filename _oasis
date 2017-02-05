@@ -46,6 +46,6 @@ Executable jsrun
 Test gen_page
   Command:
     jsoo_minify js/jslilis.js -o lilis.js && \
-    $htmlpage lilis.js ../html/lilis.css > lilis.html
+    $htmlpage lilis.js ../html/ > lilis.html
   TestTools: htmlpage
   WorkingDirectory: _build

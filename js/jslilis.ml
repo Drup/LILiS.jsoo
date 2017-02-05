@@ -195,6 +195,7 @@ let () =
 
   let open Lwt_js_events in
   Lwt.async (fun () ->
+    turtle.Glilis.color {Glilis. r = 1. ; g = 1. ; b = 1. ; a = 0.} ;
     clicks go_button (fun _ _ ->
       Dom.replaceChild sidebar stop_button go_button ;
       lwt () = Lwt_js.sleep 0.1 in
